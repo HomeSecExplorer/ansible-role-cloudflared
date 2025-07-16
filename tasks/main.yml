@@ -1,0 +1,93 @@
+---
+- name: Construct simplified OS identifier
+  ansible.builtin.set_fact:
+    os_identifier: "{{ ansible_facts.distribution | lower }}-{{ ansible_facts.distribution_version if ansible_facts.distribution | lower == 'ubuntu' else ansible_facts.distribution_major_version }}"
+  tags:
+    - always
+
+- name: Check OS version and family
+  ansible.builtin.assert:
+    that:
+      - os_identifier in [
+          "debian-11",
+          "debian-12",
+          "ubuntu-22.04",
+          "ubuntu-24.04",
+          "rocky-8",
+          "rocky-9"
+        ]
+    fail_msg: >-
+      This role can only be run against supported OSs.
+      {{ os_identifier }} is not supported.
+    success_msg: >-
+      This role is running against a supported OS: {{ os_identifier }}
+  when: hsecd_os_check
+  tags:
+    - always
+
+- name: Uninstall cloudflared
+  ansible.builtin.include_tasks:
+    file: 'cloudflared-uninstall.yml'
+    apply:
+      tags:
+        - uninstall
+  when:
+    - hsecd_uninstall | bool
+  tags:
+    - uninstall
+
+- name: Set facts
+  ansible.builtin.include_tasks:
+    file: 'cloudflared-setFacts.yml'
+    apply:
+      tags:
+        - always
+  tags:
+    - always
+
+- name: Install cloudflared
+  ansible.builtin.include_tasks:
+    file: 'cloudflared-install.yml'
+    apply:
+      tags:
+        - install
+  when:
+    - hsecd_install | bool
+    - not cloudflared_installed | bool
+  tags:
+    - install
+
+- name: Set facts
+  ansible.builtin.include_tasks:
+    file: 'cloudflared-setFacts.yml'
+    apply:
+      tags:
+        - always
+  tags:
+    - always
+
+- name: Update cloudflared
+  ansible.builtin.include_tasks:
+    file: 'cloudflared-update.yml'
+    apply:
+      tags:
+        - update
+  when:
+    - hsecd_update | bool
+    - cloudflared_installed | bool
+  tags:
+    - update
+
+- name: Configure cloudflared
+  ansible.builtin.include_tasks:
+    file: 'cloudflared-config.yml'
+    apply:
+      tags:
+        - config
+        - install
+  when:
+    - cloudflared_installed | bool
+    - hsecd_configure | bool
+  tags:
+    - config
+    - install

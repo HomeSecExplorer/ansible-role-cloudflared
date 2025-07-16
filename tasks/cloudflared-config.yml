@@ -1,0 +1,28 @@
+---
+- name: Write cloudflared config
+  ansible.builtin.template:
+    src: 'cloudflared.default.j2'
+    dest: '/etc/default/cloudflared{{ __hsecd_srv_index + 1 }}'
+    mode: '0744'
+    owner: 'cloudflared'
+    group: 'cloudflared'
+  loop: '{{ hsecd_cloudflared_services }}'
+  loop_control:
+    index_var: __hsecd_srv_index
+  vars:
+    service: '{{ item }}'
+    port_base: '{{ hsecd_cloudflared_port_base }}'
+    auto_port: '{{ hsecd_cloudflared_auto_port }}'
+  notify: restart cloudflared
+
+- name: Install cloudflared service
+  ansible.builtin.template:
+    src: 'cloudflared.service.j2'
+    dest: '/etc/systemd/system/cloudflared{{ __hsecd_srv_index + 1 }}.service'
+    mode: '0644'
+    owner: 'root'
+    group: 'root'
+  loop: '{{ hsecd_cloudflared_services }}'
+  loop_control:
+    index_var: __hsecd_srv_index
+  notify: restart cloudflared

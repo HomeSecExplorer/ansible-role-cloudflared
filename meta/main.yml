@@ -1,0 +1,32 @@
+---
+galaxy_info:
+  author: HomeSec Explorer
+  description: >
+    Ansible role to install and manage Cloudflare's cloudflared DoH daemon on Debian and Ubuntu Linux.
+    Supports multi-instance setup, GitHub/APT install, updates, and
+    integrates with Pi-hole via the HomeSecExplorer.pihole role.
+  role_name: cloudflared
+  namespace: homesecexplorer
+  license: MIT
+  min_ansible_version: '2.13'
+
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+        - bullseye
+    - name: Ubuntu
+      versions:
+        - noble
+        - jammy
+
+  galaxy_tags:
+    - cloudflared
+    - dns
+    - doh
+    - selfhosted
+    - homelab
+    - cloudflare
+    - pihole
+
+dependencies: []

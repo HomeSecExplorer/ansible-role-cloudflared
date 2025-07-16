@@ -1,0 +1,16 @@
+[Unit]
+Description=cloudflared DNS over HTTPS proxy (instance {{ __hsecd_srv_index + 1 }})
+After=syslog.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=cloudflared
+EnvironmentFile=/etc/default/cloudflared{{ __hsecd_srv_index + 1 }}
+ExecStart=/usr/local/bin/cloudflared proxy-dns $CLOUDFLARED_OPTS
+Restart=always
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

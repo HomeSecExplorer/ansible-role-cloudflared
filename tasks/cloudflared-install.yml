@@ -1,0 +1,86 @@
+---
+# Install via package repo (Debian-only)
+- name: Install cloudflared via repo
+  when:
+    - hsecd_install_method == 'repo'
+    - ansible_os_family == 'Debian'
+    - (ansible_architecture != "armv6l" and hsesp_arch_check | bool) or not hsecd_arch_check | bool
+  block:
+    - name: Add cloudflared GPG key
+      ansible.builtin.apt_key:
+        url: '{{ __hsecp_cloudflared_gpg_url }}'
+        state: 'present'
+        keyring: '{{ __hsecp_cloudflared_gpg_file }}'
+
+    - name: Add cloudflared repo
+      ansible.builtin.apt_repository:
+        repo: 'deb [signed-by={{ __hsecp_cloudflared_gpg_file }}] {{ __hsecp_cloudflared_repo_url }} {{ ansible_distribution_release }} main'
+        state: 'present'
+
+    - name: Install cloudflared
+      ansible.builtin.apt:
+        name: 'cloudflared'
+        state: 'present'
+        update_cache: true
+
+# Create user/group
+- name: Ensure cloudflared group exists
+  ansible.builtin.group:
+    name: 'cloudflared'
+    state: 'present'
+
+- name: Ensure cloudflared user exists
+  ansible.builtin.user:
+    name: 'cloudflared'
+    state: 'present'
+    group: 'cloudflared'
+    system: true
+    shell: '/usr/sbin/nologin'
+
+# Install via GitHub - Debian x86_64
+- name: Install cloudflared via GitHub (x86_64)
+  when:
+    - hsecd_install_method == 'git'
+    - ansible_architecture in ['x86_64', 'amd64']
+  ansible.builtin.get_url:
+    url: '{{ __hsecp_cloudflared_git_url }}amd64'
+    dest: '/usr/local/bin/cloudflared'
+    owner: 'cloudflared'
+    group: 'cloudflared'
+    mode: '0754'
+
+# Install via GitHub - ARM64
+- name: Install cloudflared via GitHub (ARM64)
+  when:
+    - hsecd_install_method == 'git'
+    - ansible_architecture == 'aarch64'
+  ansible.builtin.get_url:
+    url: '{{ __hsecp_cloudflared_git_url }}arm64'
+    dest: '/usr/local/bin/cloudflared'
+    owner: 'cloudflared'
+    group: 'cloudflared'
+    mode: '0754'
+
+# Install via GitHub - ARMv7
+- name: Install cloudflared via GitHub (ARMv7)
+  when:
+    - hsecd_install_method == 'git'
+    - ansible_architecture == 'armv7l'
+  ansible.builtin.get_url:
+    url: '{{ __hsecp_cloudflared_git_url }}arm'
+    dest: '/usr/local/bin/cloudflared'
+    owner: 'cloudflared'
+    group: 'cloudflared'
+    mode: '0754'
+
+# Install via GitHub - ARMv6 workaround
+- name: Install cloudflared (ARMv6 workaround)
+  when:
+    - ansible_architecture == 'armv6l'
+    - hsesp_arch_check | bool
+  ansible.builtin.get_url:
+    url: '{{ __hsecp_cloudflared_git_url }}arm'
+    dest: '/usr/local/bin/cloudflared'
+    owner: 'cloudflared'
+    group: 'cloudflared'
+    mode: '0754'

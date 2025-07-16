@@ -1,0 +1,52 @@
+---
+# Role control switches
+hsecd_install: true           # Set to true to install cloudflared if not already present.
+hsecd_uninstall: false        # Set to true to uninstall cloudflared and remove related files/services.
+hsecd_update: true            # Set to true to run cloudflared update (only applies to git installation method).
+hsecd_auto_update: false      # Set to true to enable automatic daily updates via cron (only applies if hsecd_install_method is 'git'), set to false to deactivate
+hsecd_configure: true         # Set to true to create systemd unit and config files for cloudflared.
+hsecd_os_check: true          # Check if the OS is supported before continuing. (Role support - not official Cloudflare support)
+hsecd_arch_check: true        # Set to true to enable workaround for ARMv6.
+
+# Installation method
+# Valid options:
+#   - 'git'  = download binary from GitHub releases
+#   - 'repo' = install via system package manager (Debian-based only)
+hsecd_install_method: 'git'
+
+# GitHub release tag
+# - 'latest' = install the latest release
+# - e.g. '2025.0.1' = install specific version
+hsecd_git_tag: 'latest'
+
+
+# Automatically assign ports per service
+# true  = calculate ports from `hsecd_cloudflared_port_base`
+# false = each service must define `port:` manually
+hsecd_cloudflared_auto_port: true
+
+# Starting point for auto-assigned ports.
+# First service gets this exact value (e.g., 5053)
+hsecd_cloudflared_port_base: 5053
+
+# List of cloudflared service instances to create
+# Each entry results in:
+# - /etc/systemd/system/cloudflaredX.service
+# - /etc/default/cloudflaredX
+#
+# Required keys:
+#   - upstreams: list of DNS-over-HTTPS endpoints
+# Optional keys:
+#   - options:  additional command-line flags (e.g., '--address 127.0.0.1')
+#   - port:     required only if hsecd_cloudflared_auto_port is false
+hsecd_cloudflared_services:
+  - upstreams:
+      - 'https://1.1.1.1/dns-query'
+      - 'https://1.0.0.1/dns-query'
+    options: '--address 127.0.0.1'
+    # port: 5053  # Optional if hsecd_cloudflared_auto_port = true
+  - upstreams:
+      - 'https://9.9.9.9/dns-query'
+      - 'https://149.112.112.112/dns-query'
+    options: '--address 127.0.0.1'
+    # port: 5054  # Optional if hsecd_cloudflared_auto_port = true

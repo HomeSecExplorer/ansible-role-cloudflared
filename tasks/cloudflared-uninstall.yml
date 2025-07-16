@@ -1,0 +1,65 @@
+---
+- name: Find all cloudflared service files
+  ansible.builtin.find:
+    paths: '/etc/systemd/system'
+    patterns: 'cloudflared*.service'
+  register: cloudflared_services
+
+- name: Disable and stop cloudflared services
+  ansible.builtin.systemd:
+    name: '{{ __hsecd_srv.path | basename }}'
+    enabled: false
+    state: 'stopped'
+  loop: '{{ cloudflared_services.files }}'
+  loop_control:
+    loop_var: "__hsecd__srv"
+  when: cloudflared_services.matched > 0
+
+- name: Delete cloudflared service files
+  ansible.builtin.file:
+    path: '{{ __hsecd_srv.path }}'
+    state: 'absent'
+  loop: '{{ cloudflared_services.files }}'
+  loop_control:
+    loop_var: "__hsecd_srv"
+  when: cloudflared_services.matched > 0
+
+- name: Find all /etc/default/cloudflared* files
+  ansible.builtin.find:
+    paths: '/etc/default'
+    patterns: 'cloudflared*'
+  register: cloudflared_config
+
+- name: Remove cloudflared default files
+  ansible.builtin.file:
+    path: '{{ __hsecd_conf.path }}'
+    state: 'absent'
+  loop: '{{ cloudflared_config.files }}'
+  loop_control:
+    loop_var: "__hsecd_conf"
+  when: cloudflared_config.matched > 0
+
+- name: Remove cloudflared package
+  ansible.builtin.package:
+    name: 'cloudflared'
+    state: 'absent'
+
+- name: Remove cloudflared binary
+  ansible.builtin.file:
+    path: '/usr/local/bin/cloudflared'
+    state: 'absent'
+
+- name: Reload systemd to apply changes
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Remove cloudflared user
+  ansible.builtin.user:
+    name: 'cloudflared'
+    state: 'absent'
+    remove: true
+
+- name: Remove cloudflared group
+  ansible.builtin.group:
+    name: 'cloudflared'
+    state: 'absent'

@@ -1,0 +1,22 @@
+---
+- name: Verify cloudflared is functional
+  hosts: all
+  # become: true
+  vars_files:
+    - ../../defaults/main.yml
+  tasks:
+    - name: Ensure cloudflared service is running
+      ansible.builtin.systemd:
+        name: 'cloudflared{{ item }}.service'
+        state: 'started'
+        enabled: true
+      loop: "{{ range(1, hsecd_cloudflared_services | length + 1) | list }}"
+
+    - name: Check cloudflared DNS lookup
+      ansible.builtin.command: dig +short @127.0.0.1 -p{{ item.port if not hsecd_cloudflared_auto_port else (hsecd_cloudflared_port_base + index) }} one.one.one.one
+      loop: '{{ hsecd_cloudflared_services }}'
+      loop_control:
+        index_var: index
+      register: dig_result
+      changed_when: false
+      failed_when: dig_result.stdout == ""

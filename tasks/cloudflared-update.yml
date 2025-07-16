@@ -1,0 +1,23 @@
+---
+- name: Update via apt update manually
+  ansible.builtin.debug:
+    msg: "Installation method is set to *repo*, update package manually via *apt update*"
+  when: hsecd_install_method == 'repo'
+
+- name: Update cloudflared
+  ansible.builtin.command: cloudflared update
+  register: cloudflared_update_result
+  changed_when: "'cloudflared is up to date' not in cloudflared_update_result.stderr"
+  when: hsecd_install_method == 'git'
+
+- name: Add/Remove cron for auto update
+  ansible.builtin.cron:
+    name: 'cloudflared_auto_update'
+    user: 'root'
+    state: "{{ 'present' if hsecd_auto_update else 'absent' }}"
+    minute: '{{ 59 | random(seed=inventory_hostname) }}'
+    hour: '{{ 6 | random(seed=inventory_hostname) + 2 }}'  # 2–7 AM
+    weekday: '{{ 6 | random(seed=inventory_hostname) }}'
+    cron_file: 'cloudflared-updater'
+    job: 'cloudflared update && systemctl restart cloudflared'
+  when: hsecd_install_method == 'git'

@@ -1,0 +1,11 @@
+---
+- name: Check if cloudflared is already installed
+  block:
+    - name: Execute cloudflared -v
+      ansible.builtin.command: cloudflared -v
+      changed_when: false
+      failed_when: false
+      register: cloudflared_command
+    - name: Set fact - cloudflared installed
+      ansible.builtin.set_fact:
+        cloudflared_installed: "{{ 'cloudflared version' in cloudflared_command.stdout | default(false) }}"

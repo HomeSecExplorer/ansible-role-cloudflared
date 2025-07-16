@@ -1,0 +1,6 @@
+---
+__hsecp_cloudflared_gpg_url: 'https://pkg.cloudflare.com/cloudflare-main.gpg'
+__hsecp_cloudflared_gpg_file: '/etc/apt/keyrings/cloudflare-main.gpg'
+__hsecp_cloudflared_repo_url: 'https://pkg.cloudflare.com/cloudflared'
+__hsecp_cloudflared_git_url: >-
+  https://github.com/cloudflare/cloudflared/releases/{{ 'latest/download' if hsecd_git_tag == 'latest' else 'download/' ~ hsecd_git_tag }}/cloudflared-linux-
