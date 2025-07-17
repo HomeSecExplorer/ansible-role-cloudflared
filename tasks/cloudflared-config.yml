@@ -8,7 +8,8 @@
     group: 'cloudflared'
   loop: '{{ hsecd_cloudflared_services }}'
   loop_control:
-    index_var: __hsecd_srv_index
+    index_var: "__hsecd_srv_index"
+    loop_var: "__hsecd_srv_item"
   vars:
     service: '{{ item }}'
     port_base: '{{ hsecd_cloudflared_port_base }}'
@@ -24,5 +25,6 @@
     group: 'root'
   loop: '{{ hsecd_cloudflared_services }}'
   loop_control:
-    index_var: __hsecd_srv_index
+    index_var: "__hsecd_srv_index"
+    loop_var: "__hsecd_srv_item"
   notify: restart cloudflared

@@ -1,2 +1,2 @@
 # {{ ansible_managed }}
-CLOUDFLARED_OPTS=--port {{ service.port if not auto_port else (port_base + __hsecd_srv_index) }}{% for upstream in service.upstreams %} --upstream {{ upstream }}{% endfor %}{% if service.options %} {{ service.options }}{% endif %}
+CLOUDFLARED_OPTS=--port {{ __hsecd_srv_item.port if not auto_port else (port_base + __hsecd_srv_index) }}{% for upstream in __hsecd_srv_item.upstreams %} --upstream {{ upstream }}{% endfor %}{% if __hsecd_srv_item.options %} {{ __hsecd_srv_item.options }}{% endif %}

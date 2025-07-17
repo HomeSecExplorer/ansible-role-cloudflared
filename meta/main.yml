@@ -19,6 +19,9 @@ galaxy_info:
       versions:
         - noble
         - jammy
+    - name: Rocky
+      versions:
+        - all
 
   galaxy_tags:
     - cloudflared

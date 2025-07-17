@@ -1,9 +1,11 @@
 ---
 - name: restart cloudflared
   ansible.builtin.systemd:
-    name: 'cloudflared{{ item }}.service'
+    name: 'cloudflared{{ __hsecd_srv_handler }}.service'
     state: 'restarted'
     enabled: true
     daemon_reload: true
   loop: "{{ range(1, hsecd_cloudflared_services | length + 1) | list }}"
+  loop_control:
+    loop_var: "__hsecd_srv_handler"
   throttle: 1

@@ -32,6 +32,7 @@ Each cloudflared service instance runs on its own port and configuration, allowi
 
 - Debian 11 (Bullseye), 12 (Bookworm)
 - Ubuntu 22.04 (Jammy), 24.04 (Noble)
+- Rocky 9 (Blue Onyx)
 
 > ⚠️ The OS compatibility check (`hsecd_os_check`) ensures supported platforms for this role - not official Cloudflare support. Installation on ARM devices is **not officially tested**.
 
