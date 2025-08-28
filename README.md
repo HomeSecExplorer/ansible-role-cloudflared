@@ -46,6 +46,7 @@ Each cloudflared service instance runs on its own port and configuration, allowi
 | Debian | 11 | :white_circle: | :repeat: |  |
 | Ubuntu | 24.04 | :white_check_mark: | :repeat: |  |
 | Ubuntu | 22.04 | :white_circle: | :repeat: |  |
+| Rocky | 9 | :white_check_mark: | :repeat: |  |
 
 ---
 
