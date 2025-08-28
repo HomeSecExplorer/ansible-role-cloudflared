@@ -36,6 +36,17 @@ Each cloudflared service instance runs on its own port and configuration, allowi
 
 > ⚠️ The OS compatibility check (`hsecd_os_check`) ensures supported platforms for this role - not official Cloudflare support. Installation on ARM devices is **not officially tested**.
 
+## Test matrix
+
+**Legend:** :white_check_mark: manual test passed - :repeat: covered in CI - :white_circle: not tested
+
+| Distro | Version | Manually verified | CI | Notes |
+|:-------|:--------|:-----------------:|:--:|:-----|
+| Debian | 12 | :white_check_mark: | :repeat: |  |
+| Debian | 11 | :white_circle: | :repeat: |  |
+| Ubuntu | 24.04 | :white_check_mark: | :repeat: |  |
+| Ubuntu | 22.04 | :white_circle: | :repeat: |  |
+
 ---
 
 ## Role Variables (Examples)
