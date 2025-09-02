@@ -30,7 +30,7 @@ Each cloudflared service instance runs on its own port and configuration, allowi
 
 ## Supported Operating Systems
 
-- Debian 11 (Bullseye), 12 (Bookworm)
+- Debian 11 (Bullseye), 12 (Bookworm), 13 (Trixie)
 - Ubuntu 22.04 (Jammy), 24.04 (Noble)
 - Rocky 9 (Blue Onyx)
 
@@ -42,6 +42,7 @@ Each cloudflared service instance runs on its own port and configuration, allowi
 
 | Distro | Version | Manually verified | CI | Notes |
 |:-------|:--------|:-----------------:|:--:|:-----|
+| Debian | 13 | :white_check_mark: | :repeat: |  |
 | Debian | 12 | :white_check_mark: | :repeat: |  |
 | Debian | 11 | :white_circle: | :repeat: |  |
 | Ubuntu | 24.04 | :white_check_mark: | :repeat: |  |

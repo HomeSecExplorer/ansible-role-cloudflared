@@ -6,13 +6,14 @@ galaxy_info:
     Supports multi-instance setup, GitHub/APT install, updates, and
     integrates with Pi-hole via the HomeSecExplorer.pihole role.
   role_name: cloudflared
-  namespace: homesecexplorer
+  namespace: HomeSecExplorer
   license: MIT
   min_ansible_version: '2.13'
 
   platforms:
     - name: Debian
       versions:
+        - trixie
         - bookworm
         - bullseye
     - name: Ubuntu

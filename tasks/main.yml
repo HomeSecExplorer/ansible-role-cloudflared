@@ -11,6 +11,7 @@
       - os_identifier in [
           "debian-11",
           "debian-12",
+          "debian-13",
           "ubuntu-22.04",
           "ubuntu-24.04",
           "rocky-8",

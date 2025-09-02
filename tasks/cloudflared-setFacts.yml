@@ -8,4 +8,4 @@
       register: cloudflared_command
     - name: Set fact - cloudflared installed
       ansible.builtin.set_fact:
-        cloudflared_installed: "{{ 'cloudflared version' in cloudflared_command.stdout | default(false) }}"
+        cloudflared_installed: "{{ cloudflared_command.rc == 0 | default(false) }}"

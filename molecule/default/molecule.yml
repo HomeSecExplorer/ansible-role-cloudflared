@@ -9,8 +9,8 @@ driver:
   name: docker
 
 platforms:
-  - name: ${MOLECULE_DISTRO:-debian12}
-    image: geerlingguy/docker-${MOLECULE_DISTRO:-debian12}-ansible
+  - name: ${MOLECULE_DISTRO:-debian13}
+    image: geerlingguy/docker-${MOLECULE_DISTRO:-debian13}-ansible
     pre_build_image: true
     privileged: true
     cgroupns_mode: host
